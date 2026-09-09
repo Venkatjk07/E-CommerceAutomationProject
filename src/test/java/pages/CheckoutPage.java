@@ -22,11 +22,11 @@ public class CheckoutPage {
 
     By finishButton = By.id("finish");
 
-    By successMessage = By.className("complete-header");
+    By successMessage = By.xpath("//h2[text()='Thank you for your order!']");
 
     public CheckoutPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
     public void enterFirstName(String fname) {
@@ -67,11 +67,21 @@ public class CheckoutPage {
     public void clickFinish() {
 
         wait.until(
-                ExpectedConditions.elementToBeClickable(finishButton)
-        ).click();
-    }
+                ExpectedConditions.visibilityOfElementLocated(finishButton)
+        );
 
+        wait.until(
+                ExpectedConditions.elementToBeClickable(finishButton)
+        );
+
+        driver.findElement(finishButton).click();
+    }
+    
     public boolean isOrderSuccessful() {
+
+        wait.until(
+                ExpectedConditions.urlContains("checkout-complete")
+        );
 
         return wait.until(
                 ExpectedConditions.visibilityOfElementLocated(successMessage)
